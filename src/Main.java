@@ -14,22 +14,11 @@ public class Main {
         producer.start();
 
 
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        List<Future<?>> runnables = new ArrayList<>();
-
-        Thread t = new Thread(new Consumer(reentrantLock, condition, list), "as");
         for (int a = 0; a < 10; a++) {
-            runnables.add(executorService.submit(t));
+            new Thread(new Consumer(reentrantLock, condition, list), "Thread " + a).start();
         }
-        runnables.forEach(x -> {
-            try {
-                x.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        });
 
-        executorService.shutdown();
+        Thread.sleep(3000);
         producer.interrupt();
 
 
