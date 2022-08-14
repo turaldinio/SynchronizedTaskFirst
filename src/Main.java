@@ -1,84 +1,37 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
-    public static void main(String[] args) {
-        ProducerConsumer<Car> producerConsumer = new ProducerConsumer<>();
-        Car car = new Car("BMV");
+    public static void main(String[] args) throws InterruptedException {
+        ReentrantLock reentrantLock = new ReentrantLock();
+        Condition condition = reentrantLock.newCondition();
+        List<Car> list = new ArrayList<>();
 
-        Thread producer = new Thread(() -> {
-            while (!Thread.interrupted()) {
-                try {
-                    producerConsumer.produce(car);
-                    Thread.sleep(350);
-                } catch (InterruptedException e) {
-                    return;
-                }
-            }
-        });
+        Thread producer = new Thread(new Producer(reentrantLock, condition, list));
         producer.start();
 
-        for (int a = 0; a < 5; a++) {
-            Thread consumer = new Thread(() -> {
-                try {
-                    Thread.sleep(800);
-                } catch (InterruptedException e) {
-                    return;
-                }
-                producerConsumer.consume();
-            }, "Покупатель " + a);
-            consumer.start();
 
-        }
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Future<?>> runnables = new ArrayList<>();
 
-        try {
-            Thread.sleep(2500);
-        } catch (InterruptedException e) {
-            return;
+        Thread t = new Thread(new Consumer(reentrantLock, condition, list), "as");
+        for (int a = 0; a < 10; a++) {
+            runnables.add(executorService.submit(t));
         }
+        runnables.forEach(x -> {
+            try {
+                x.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
+
+        executorService.shutdown();
         producer.interrupt();
 
-    }
-}
 
-class ProducerConsumer<T> {
-    private final List<T> buffer = new ArrayList<>();
-
-    public void produce(T value) {
-        synchronized (buffer) {
-
-            buffer.add(value);
-            System.out.println("Производитель добавил машину " + value);
-            buffer.notify();
-        }
-    }
-
-    public void consume() {
-        synchronized (buffer) {
-            String threadName = Thread.currentThread().getName();
-            if (buffer.isEmpty()) {
-                try {
-                    System.out.println(threadName + " ожидает поставки машины");
-                    buffer.wait();
-                } catch (InterruptedException e) {
-                    return;
-                }
-            }
-            System.out.println(threadName + " покупает машину");
-            buffer.remove(0);
-        }
-    }
-}
-
-class Car {
-    private String carName;
-
-    public Car(String carName) {
-        this.carName = carName;
-    }
-
-    @Override
-    public String toString() {
-        return carName;
     }
 }
