@@ -1,12 +1,13 @@
 import restaurant.Client;
+import restaurant.Cook;
 import restaurant.Waiter;
 
 public class Main {
     public static void main(String[] args) {
-        Client client = new Client();
+        for (int a = 0; a < 5; a++) {
 
-        Waiter waiter = new Waiter();
-        waiter.serveTheCustomer(client);
+        }
+
 
     }
 }

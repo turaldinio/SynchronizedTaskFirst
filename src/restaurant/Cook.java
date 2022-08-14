@@ -4,19 +4,23 @@ import java.util.List;
 
 public class Cook {
 
-    public void startCooking(List<Meat> orders) {
+    public void startCooking(Waiter waiter, Order order) {
         try {
-            for (Meat meat : orders) {
-                Thread.sleep((int) (Math.random() * 1000));
+            for (Meat meat : order.getOrder()) {
+                Thread.sleep(meat.getCookingTime());
                 System.out.println("Блюдо " + meat.name() + " готово");
             }
 
         } catch (InterruptedException e) {
             return;
         }
+        System.out.println("все блюда приготовлены");
+        giveItToTheWaiter(waiter, order);
     }
 
-    public void theDishIsReady() {
-
+    public void giveItToTheWaiter(Waiter waiter, Order order) {
+        waiter.takeTheOrder(order);
     }
+
+
 }
