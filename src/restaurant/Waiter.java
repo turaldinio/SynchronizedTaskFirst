@@ -13,19 +13,23 @@ public class Waiter implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Официант: стартует");
+        String waiterName = Thread.currentThread().getName();
+
+        System.out.println(waiterName + ": на работе");
         synchronized (client.getSelectedDishes()) {
-            System.out.println("Официант: блокирует монитор");
+            //System.out.println(waiterName + " :блокирует монитор");
             while (client.getSelectedDishes().isEmpty()) {
-                System.out.println("Официант: лист пуст, отдаю монитор");
+                //    System.out.println(waiterName + ": лист пуст, отдаю монитор");
                 try {
                     client.getSelectedDishes().wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            System.out.println("Официант: список не пуст, отдам повару");
-
+            System.out.println(waiterName + ": передаю заказ повару");
+            Order clientOrder = cook.startPreparingTheOrder(client.getSelectedDishes());
+            System.out.println(waiterName + ": отдаю заказ клиенту");
+            client.setOrder(clientOrder);
         }
 
     }
