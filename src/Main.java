@@ -21,7 +21,7 @@ public class Main {
         for (int a = 0; a < 5; a++) {
             Thread consumer = new Thread(() -> {
                 try {
-                    Thread.sleep(800);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     return;
                 }
@@ -46,7 +46,6 @@ class ProducerConsumer<T> {
 
     public void produce(T value) {
         synchronized (buffer) {
-
             buffer.add(value);
             System.out.println("Производитель добавил машину " + value);
             buffer.notify();
@@ -56,7 +55,7 @@ class ProducerConsumer<T> {
     public void consume() {
         synchronized (buffer) {
             String threadName = Thread.currentThread().getName();
-            if (buffer.isEmpty()) {
+            while (buffer.isEmpty()) {
                 try {
                     System.out.println(threadName + " ожидает поставки машины");
                     buffer.wait();
