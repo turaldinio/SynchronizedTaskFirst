@@ -27,9 +27,6 @@ public class Client implements Runnable {
                 selectedDishes.add(Meat.values()[(int) (Math.random() * Meat.values().length)]);
 
             }
-            selectedDishes.add(Meat.Beef);
-            selectedDishes.add(Meat.Water);
-
             selectedDishes.notify();
         }
         while (this.order == null) {
