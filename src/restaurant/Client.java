@@ -46,7 +46,7 @@ public class Client implements Runnable {
     public void eatEverything(Order order) {
         for (Meat m : order.getOrderList()) {
             try {
-                Thread.sleep(m.getCookingTime() * (int) (Math.random() * 5));
+                Thread.sleep(m.getCookingTime() );
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
