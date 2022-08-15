@@ -3,6 +3,10 @@ package restaurant;
 import java.util.List;
 
 public class Cook {
+    public Cook() {
+        System.out.println("Повар на работе");
+    }
+
     public Order startPreparingTheOrder(List<Meat> orderList) {
         synchronized (Cook.class) {
             for (Meat m : orderList) {

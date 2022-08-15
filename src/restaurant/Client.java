@@ -22,7 +22,6 @@ public class Client implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //           System.out.println(clientName + " : выбираю блюда");
             int meatCount = (int) (Math.random() * Meat.values().length);
             for (int a = 0; a < meatCount; a++) {
                 selectedDishes.add(Meat.values()[(int) (Math.random() * Meat.values().length)]);
@@ -31,29 +30,24 @@ public class Client implements Runnable {
             selectedDishes.add(Meat.Beef);
             selectedDishes.add(Meat.Water);
 
-            // System.out.println(clientName + " Отдаю официанту");
             selectedDishes.notify();
         }
         while (this.order == null) {
-            // System.out.println(clientName + " :жду заказ");
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        //    System.out.println(clientName + " :получил заказ");
         eatEverything(order);
         System.out.println(clientName + " :Спасибо, до свидания");
     }
 
 
     public void eatEverything(Order order) {
-        //  System.out.println("Клиент ест");
         for (Meat m : order.getOrderList()) {
             try {
                 Thread.sleep(m.getCookingTime() * (int) (Math.random() * 5));
-                //        System.out.println("Клиент съедает " + m.name());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

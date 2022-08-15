@@ -1,6 +1,5 @@
 package restaurant;
 
-import java.util.List;
 
 public class Waiter implements Runnable {
     private Client client;
@@ -17,9 +16,7 @@ public class Waiter implements Runnable {
 
         System.out.println(waiterName + ": на работе");
         synchronized (client.getSelectedDishes()) {
-            //System.out.println(waiterName + " :блокирует монитор");
             while (client.getSelectedDishes().isEmpty()) {
-                //    System.out.println(waiterName + ": лист пуст, отдаю монитор");
                 try {
                     client.getSelectedDishes().wait();
                 } catch (InterruptedException e) {
