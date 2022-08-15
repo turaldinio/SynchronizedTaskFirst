@@ -6,18 +6,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Client implements Runnable {
-    private final Order order;
     private final List<Meat> selectedDishes;
 
     public Client() {
-        this.order = new Order();
         this.selectedDishes = new ArrayList<>();
     }
 
 
     @Override
     public void run() {
-        synchronized (order.getOrderList()) {
+        synchronized (selectedDishes) {
             System.out.println("Клиент: блокирую монитор");
             try {
                 Thread.sleep(700);
@@ -26,15 +24,15 @@ public class Client implements Runnable {
             }
             System.out.println("Клиент: выбираю блюда");
 
-            order.addToOrder(Meat.Beef);
-            order.addToOrder(Meat.Water);
+            selectedDishes.add(Meat.Beef);
+            selectedDishes.add(Meat.Water);
 
             System.out.println("Клиент: Отдаю официанту");
-            order.getOrderList().notify();
+            selectedDishes.notify();
         }
     }
 
-    public Order getOrder() {
-        return order;
+    public List<Meat> getSelectedDishes() {
+        return selectedDishes;
     }
 }

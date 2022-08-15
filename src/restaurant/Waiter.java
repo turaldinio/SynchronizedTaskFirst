@@ -14,12 +14,12 @@ public class Waiter implements Runnable {
     @Override
     public void run() {
         System.out.println("Официант: стартует");
-        synchronized (client.getOrder().getOrderList()) {
+        synchronized (client.getSelectedDishes()) {
             System.out.println("Официант: блокирует монитор");
-            while (client.getOrder().getOrderList().isEmpty()) {
+            while (client.getSelectedDishes().isEmpty()) {
                 System.out.println("Официант: лист пуст, отдаю монитор");
                 try {
-                    client.getOrder().getOrderList().wait();
+                    client.getSelectedDishes().wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
