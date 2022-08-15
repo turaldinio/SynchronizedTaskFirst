@@ -39,6 +39,8 @@ public class Client implements Runnable {
                 e.printStackTrace();
             }
         }
+        System.out.println(clientName + " :Приступает к приему пищи");
+
         eatEverything(order);
         System.out.println(clientName + " :Спасибо, до свидания");
     }

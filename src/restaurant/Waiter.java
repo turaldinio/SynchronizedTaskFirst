@@ -5,9 +5,9 @@ public class Waiter implements Runnable {
     private Client client;
     private Cook cook;
 
-    public Waiter(Client client, Cook cook) {
-        this.client = client;
+    public Waiter(Cook cook, Client client) {
         this.cook = cook;
+        this.client = client;
     }
 
     @Override
